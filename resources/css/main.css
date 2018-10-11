@@ -131,7 +131,7 @@ header {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  background-image: linear-gradient(rgba(45, 45, 50, 0.9),rgba(45, 45, 50, 0.9)),
+  background-image: linear-gradient(rgba(45, 45, 50, 0.8),rgba(45, 45, 50, 0.8)),
     url('http://paper-backgrounds.com/textureimages/2012/05/white-concrete-wall-texture-background-hd.jpg');
 }
 
@@ -140,6 +140,7 @@ header .logo {
   padding: 5px 0;
   border: 2px solid transparent;
   border-bottom: 2px solid #ffffff;
+  float: left;
 }
 
 /* Main navigation */
@@ -152,8 +153,8 @@ header .logo {
 }
 
 .main-nav li {
-  display: inline-block;
   margin-left: 40px;
+  display: inline-block;
 }
 
 .main-nav li a:link,
@@ -183,10 +184,37 @@ header .logo {
 /* Small Clock */
 
 .small-clock {
-  height: 18px;
-  width: 18px;
-  margin-right: 10px;
+  height: 16px;
+  width: 16px;
+  margin: 0 10px;
   border: 2px solid #ffffff;
+  padding: 10px;
   border-radius: 50%;
-  display: inline-block;
+  float: left;
+  position: relative;
+}
+
+.small-clock .hours {
+  position: absolute;
+  width: 2px;
+  padding: 0px;
+  margin: 6px 0px -1px 0px;
+  height: 13px;
+  left: 50%;
+  top: 0%;
+  background: #BA9857;
+  transform-origin: bottom center;
+}
+
+.small-clock .minutes {
+  position: absolute;
+  width: 2px;
+  padding: 0px;
+  margin: 0px;
+  margin: 1px 0px -1px 0px;
+  height: 17px;
+  left: 50%;
+  top: 0%;
+  background: #ffffff;
+  transform-origin: bottom center;  
 }

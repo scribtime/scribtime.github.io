@@ -20,12 +20,11 @@
     <header>
       <nav>
         <div class="row">
-          <div class="small-clock"></div>
-          <span class="logo">
-            <span>SCRIBTIME</span> -
+          <header-clock :hours="hours" :minutes="minutes"></header-clock>
+          <div class="logo">
             <header-date :date="date"></header-date> -
-            <header-clock :time="time"></header-clock>
-          </span>
+            <header-time :time="time"></header-time>
+          </div>
           <ul class="main-nav">
             <li><a href="#day">Day</a></li>
             <li><a href="#week">Week</a></li>
