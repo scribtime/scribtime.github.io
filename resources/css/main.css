@@ -1,0 +1,192 @@
+/*
+EDE9E6
+709FA7
+606E79
+1BA0AA
+202829
+*/
+
+body {
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  background-color: #F5EFEF;
+  font-size: 100%;
+  text-rendering: optimizeLegibility;
+	font-family: 'Lato', sans-serif;
+  vertical-align: baseline;
+  font-weight: 300;
+  font-size: 20px;
+}
+
+/* Reusable components */
+.row {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+/* Headings */
+
+/* Headings ------------------------------------ */
+
+h1, 
+h2,
+h3 {
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  margin-bottom: 20px;
+  color: #ffffff;
+  font-size: 180%;
+  word-spacing: 4px;
+  letter-spacing: 1px;
+}
+
+h2 {
+  font-size: 140%;
+  word-spacing: 2px;
+  text-align: center;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+
+h3 {
+  font-size: 110%;
+  margin-bottom: 15px;
+}
+
+/* Buttons ------------------------------------- */
+
+.btn:link,
+.btn:visited,
+input[type=submit] {
+  display: inline-block;
+  padding: 10px 30px;
+  font-weight: 300;
+  text-decoration: none;
+  border-radius: 120px;
+  transition: background-color 0.2s, border 0.2s, color 0.2s;
+  margin-right: 15px;
+}
+
+.btn-full:link,
+.btn-full:visited,
+input[type=submit] {
+  background-color: #BA9857;
+  border: 1px solid #BA9857;
+  color: #ffffff;
+}
+
+.btn-ghost:link,
+.btn-ghost:visited {
+  border: 1px solid #BA9857;
+  color: #BA9857;
+}
+
+.btn:hover,
+.btn:active,
+input[type=submit]:hover,
+input[type=submit]:active {
+  background-color: #a0824a;
+}
+
+.btn-full:hover,
+.btn-full:active {
+  border: 1px solid #a0824a;
+}
+
+.btn-ghost:hover,
+.btn-ghost:active {
+  border: 1px solid #a0824a;
+  color: #ffffff;
+}
+
+/* Mobile navigation */
+
+.mobile-nav-icon {
+  float: right;
+  margin-top: 30px;
+  cursor: pointer;
+  display: none;
+}
+
+.mobile-nav-icon i {
+  font-size: 200%;
+  color: white;
+}
+
+/* ---------------------------- */
+/* Header                       */
+/* ---------------------------- */
+
+header {
+  margin: 0;
+  padding: 20px 10px;
+  color: #ffffff;
+  text-transform: uppercase;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-image: linear-gradient(rgba(45, 45, 50, 0.9),rgba(45, 45, 50, 0.9)),
+    url('http://paper-backgrounds.com/textureimages/2012/05/white-concrete-wall-texture-background-hd.jpg');
+}
+
+header .logo {
+  font-size: 90%;
+  padding: 5px 0;
+  border: 2px solid transparent;
+  border-bottom: 2px solid #ffffff;
+}
+
+/* Main navigation */
+
+.main-nav {
+  margin: 0;
+  padding-top: 5px;
+  float: right;
+  list-style: none;
+}
+
+.main-nav li {
+  display: inline-block;
+  margin-left: 40px;
+}
+
+.main-nav li a:link,
+.main-nav li a:visited {
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 90%;
+  color: #ffffff;
+  border: 2px solid transparent;
+  transition: border-bottom 0.2s;
+  padding: 5px 0;
+}
+
+.main-nav li a:hover,
+.main-nav li a:active {
+  border-bottom: 2px solid #BA9857;
+}
+
+.hero-text-box {
+  position: absolute;
+  width: 1140px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Small Clock */
+
+.small-clock {
+  height: 18px;
+  width: 18px;
+  margin-right: 10px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  display: inline-block;
+}
