@@ -48,114 +48,132 @@
       </div>
 
     </header>
+
+    <section class="section-features" id="features">
+      <div class="row">
+        <h2>Stay in time and control</h2>
+        <p class="long-copy">
+          Use Scribtime to plan and track your working hours.
+        </p>
+      </div>
+    </section>
+
+    <!--
+      <section class="section-dashboard" id="dashboard">
+          <div class="row">
+            <h2>Dashboard</h2>
+          </div>
+      </section>
+      -->
+
+    <section class="section-day" id="day">
+      <div class="row">
+        <h2>Day - {{date}}</h2>
+      </div>
+      <div class="row">
+
+        <div class="col span-1-of-3">
+          <div class="day-box day-box-entries">
+            <div>
+              <h3>Entries</h3>
+            </div>
+            <div>
+              <label for="startEntry">Start</label>
+              <input type="text" name="startEntry" id="startEntry" placeholder="Start Time" required v-model="startEntry"
+                @blur="calculateTime">
+            </div>
+            <div>
+              <label for="durationEntry">Duration</label>
+              <input type="text" name="durationEntry" id="durationEntry" placeholder="Duration" required v-model="durationEntry"
+                @blur="calculateTime">
+            </div>
+            <div>
+              <label for="endEntry">End</label>
+              <input type="text" name="endEntry" id="endEntry" placeholder="End Time" required v-model="endEntry" @blur="calculateTime">
+            </div>
+            <div></div>
+          </div>
+        </div>
+
+        <div class="col span-1-of-3">
+          <div class="day-box day-box-plan">
+            <div>
+              <h3>Plan</h3>
+            </div>
+            <div>
+              <span class="display-label">Start</span>
+              <span class="display-value">{{startPlan}}</span>
+            </div>
+            <div>
+              <span class="display-label">Duration</span>
+              <span class="display-value">{{durationPlan}}</span>
+            </div>
+            <div>
+              <span class="display-label">End</span>
+              <span class="display-value">{{endPlan}}</span>
+            </div>
+            <div></div>
+          </div>
+        </div>
+
+        <div class="col span-1-of-3">
+          <div class="day-box day-box-stats">
+            <div>
+              <h3>Stats</h3>
+            </div>
+            <div>
+              <span class="display-label">Current Duration</span>
+              <span class="display-value">{{currentDuration}}</span>
+            </div>
+            <div>
+              <span class="display-label">Duration Difference</span>
+              <span class="display-value">{{diffDuration}}</span>
+            </div>
+            <div>
+              <span class="display-label">Status</span>
+              <span class="display-value">{{status}}</span>
+            </div>
+            <div></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!--
+      <section class="section-week" id="week">
+        <div class="row">
+          <h2>Week</h2>
+        </div>
+      </section>
+    
+      <section class="section-month" id="month">
+        <div class="row">
+          <h2>Month</h2>
+        </div>
+      </section>
+      -->
+
+    <footer>
+      <div class="row">
+        <div class="col span-1-of-2">
+          <ul class="footer-nav">
+            <li><a href="#">About us</a></li>
+          </ul>
+        </div>
+        <div class="col span-1-of-2">
+
+        </div>
+      </div>
+    </footer>
   </div>
 
-  <section class="section-features" id="features">
-    <div class="row">
-      <h2>Stay in time and control</h2>
-      <p class="long-copy">
-        Use Scribtime to plan and track your working hours.
-      </p>
-    </div>
-  </section>
 
-  <!--
-  <section class="section-dashboard" id="dashboard">
-      <div class="row">
-        <h2>Dashboard</h2>
-      </div>
-  </section>
-  -->
-
-  <section class="section-day" id="day">
-    <div class="row">
-      <h2>Day</h2>
-    </div>
-    <div class="row">
-
-      <div class="col span-1-of-3">
-        <div class="day-box day-box-entries">
-          <div>
-            <h3>Entries</h3>
-          </div>
-          <div>
-            <label for="startEntry">Start</label>
-            <input type="text" name="startEntry" id="startEntry" placeholder="Start Time" required>
-          </div>
-          <div>
-            <label for="durationEntry">Duration</label>
-            <input type="text" name="durationEntry" id="durationEntry" placeholder="Duration" required>
-          </div>
-          <div>
-            <label for="endEntry">End</label>
-            <input type="text" name="endEntry" id="endEntry" placeholder="End Time" required>
-          </div>
-          <div></div>
-        </div>
-      </div>
-
-      <div class="col span-1-of-3">
-        <div class="day-box day-box-plan">
-          <div>
-            <h3>Plan</h3>
-          </div>
-          <div>
-            <span class="display-label">Start</span>
-            <span class="display-value">00:00</span>
-          </div>
-          <div>
-            <span class="display-label">Duration</span>
-            <span class="display-value">00:00</span>
-          </div>
-          <div>
-            <span class="display-label">End</span>
-            <span class="display-value">00:00</span>
-          </div>
-          <div></div>
-        </div>
-      </div>
-
-      <div class="col span-1-of-3">
-        <div class="day-box day-box-stats">
-          <div>
-            <h3>Stats</h3>
-          </div>
-          <div></div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!--
-  <section class="section-week" id="week">
-    <div class="row">
-      <h2>Week</h2>
-    </div>
-  </section>
-
-  <section class="section-month" id="month">
-    <div class="row">
-      <h2>Month</h2>
-    </div>
-  </section>
-  -->
-
-  <footer>
-    <div class="row">
-      <div class="col span-1-of-2">
-        <ul class="footer-nav">
-          <li><a href="#">About us</a></li>
-        </ul>
-      </div>
-      <div class="col span-1-of-2">
-
-      </div>
-    </div>
-  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-duration-format/2.2.2/moment-duration-format.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
   <script src="resources/js/main.js"></script>
 
 </body>
