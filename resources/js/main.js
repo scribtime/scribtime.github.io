@@ -65,15 +65,19 @@ new Vue({
       var durationEntryMoment = moment.duration(this.durationEntry);
 
       if (_.trim(this.startEntry) !== '' && startEntryMoment.isValid() && _.trim(this.durationEntry) !== '' && durationEntryMoment.isValid()) {
+
         this.startPlan = startEntryMoment.format(moment.HTML5_FMT.TIME);
         this.durationPlan = durationEntryMoment.format(moment.HTML5_FMT.TIME, {
           trim: false
         });
         this.endPlan = startEntryMoment.add(durationEntryMoment).format(moment.HTML5_FMT.TIME);
+
       } else if (startEntryMoment.isValid()) {
+
         this.startPlan = startEntryMoment.format(moment.HTML5_FMT.TIME);
         this.durationPlan = '--:--';
         this.endPlan = '--:--';
+        
       }
 
     },
