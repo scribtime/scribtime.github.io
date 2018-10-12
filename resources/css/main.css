@@ -1,9 +1,5 @@
 /*
-EDE9E6
-709FA7
-606E79
-1BA0AA
-202829
+F5EFEF	BA9857	8FBC50	B54430	2D2D32
 */
 
 body {
@@ -20,9 +16,14 @@ body {
 }
 
 /* Reusable components */
+
 .row {
   max-width: 1140px;
   margin: 0 auto;
+}
+
+section {
+  padding: 80px 0;
 }
 
 /* Headings */
@@ -53,9 +54,27 @@ h2 {
   letter-spacing: 1px;
 }
 
+h2:after {
+  display: block;
+  height: 2px;
+  background-color: #8FBC50;
+  content: " ";
+  width: 100px;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+
 h3 {
   font-size: 110%;
   margin-bottom: 15px;
+}
+
+/* Paragraphs ---------------------------------- */
+
+.long-copy {
+  line-height: 145%;
+  width: 70%;
+  margin-left: 15%;
 }
 
 /* Buttons ------------------------------------- */
@@ -181,7 +200,7 @@ header .logo {
   transform: translate(-50%, -50%);
 }
 
-/* Small Clock */
+/* Header Clock */
 
 .small-clock {
   height: 16px;
@@ -217,4 +236,156 @@ header .logo {
   top: 0%;
   background: #ffffff;
   transform-origin: bottom center;  
+}
+
+/* ---------------------------- */
+/* Section Features             */
+/* ---------------------------- */
+
+.section-features {
+  background-color: #ece6e6;
+}
+
+/* ---------------------------- */
+/* Section Dashboard            */
+/* ---------------------------- */
+
+.section-dashboard {
+  background-color: #ece6e6;
+}
+
+/* ---------------------------- */
+/* Section Day                  */
+/* ---------------------------- */
+
+.section-day {
+  background-color: #F5EFEF;
+}
+
+.day-box {
+  background-color: #ffffff;
+  border-radius: 5px;
+  width: 90%;
+  margin-left: 5%;
+  box-shadow: 0 2px 2px #ededed;
+}
+
+.day-box-entries {
+  border: 2px solid #8FBC50;
+}
+
+.day-box-stats,
+.day-box-plan {
+  border: 2px solid #BA9857;
+}
+
+.day-box-plan input {
+  pointer-events: none;
+}
+
+.day-box div {
+  padding: 15px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.day-box div:first-child {
+  background-color: #fcfcfc;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.day-box div:last-child {
+  text-align: center;
+  border: none;
+}
+
+/* ---------------------------- */
+/* Section Week                 */
+/* ---------------------------- */
+
+.section-week {
+  background-color: #ece6e6;
+}
+
+/* ---------------------------- */
+/* Section Month                */
+/* ---------------------------- */
+
+.section-month {
+  background-color: #F5EFEF;
+}
+
+/* ---------------------------- */
+/* Form                         */
+/* ---------------------------- */
+
+label {
+  display: inline-block;
+  padding-bottom: 10px;
+  font-size: 90%;
+}
+
+input[type=text] {
+  width: 95%;
+  padding: 7px;
+  border-radius: 3px;
+  border: 1px solid #cccccc;
+  font-size: 60%;
+}
+
+input:focus {
+  outline: none;
+}
+
+.display-label {
+  display: inline-block;
+  padding-bottom: 10px;
+  font-size: 90%;
+}
+
+.display-value {
+  display:  inline-block;
+  width: 95%;
+  padding: 7px 7px 7px 0px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0);
+  font-size: 75%;
+}
+
+/* ---------------------------- */
+/* Footer                       */
+/* ---------------------------- */
+
+footer {
+  background-color: #2d2d32;
+  padding: 50px;
+  font-size: 80%;
+}
+
+.footer-nav {
+  list-style: none;
+  float: left;
+}
+
+.footer-nav li {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.footer-nav li a:link,
+.footer-nav li a:visited {
+  text-decoration: none;
+  border: 0;
+  color: #888888;
+  transition: color 0.2s;
+}
+
+.footer-nav li a:hover,
+.footer-nav li a:active {
+  color: #dddddd;
+}
+
+.social-links li a:link,
+.social-links li a:visited {
+  font-size: 160%;
 }
