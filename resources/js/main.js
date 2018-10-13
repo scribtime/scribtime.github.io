@@ -36,12 +36,12 @@ new Vue({
     date: moment().format('l'),
     hours: moment().hours(),
     minutes: moment().minutes(),
-    startEntry: '',
-    durationEntry: '',
-    endEntry: '',
-    startPlan: '--:--',
-    durationPlan: '--:--',
-    endPlan: '--:--',
+    startInput: '',
+    durationInput: '',
+    endInput: '',
+    startValue: '--:--',
+    durationValue: '--:--',
+    endValue: '--:--',
     currentDuration: '--:--',
     diffDuration: '--:--',
     status: '-'
@@ -61,39 +61,39 @@ new Vue({
     },
     calculateTime: function () {
 
-      var startEntryMoment = moment(this.startEntry, moment.HTML5_FMT.TIME);
-      var durationEntryMoment = moment.duration(this.durationEntry);
+      var startInputMoment = moment(this.startInput, moment.HTML5_FMT.TIME);
+      var durationInputMoment = moment.duration(this.durationInput);
 
-      if (_.trim(this.startEntry) !== '' && startEntryMoment.isValid() && _.trim(this.durationEntry) !== '' && durationEntryMoment.isValid()) {
+      if (_.trim(this.startInput) !== '' && startInputMoment.isValid() && _.trim(this.durationInput) !== '' && durationInputMoment.isValid()) {
 
-        this.startPlan = startEntryMoment.format(moment.HTML5_FMT.TIME);
-        this.durationPlan = durationEntryMoment.format(moment.HTML5_FMT.TIME, {
+        this.startValue = startInputMoment.format(moment.HTML5_FMT.TIME);
+        this.durationValue = durationInputMoment.format(moment.HTML5_FMT.TIME, {
           trim: false
         });
-        this.endPlan = startEntryMoment.add(durationEntryMoment).format(moment.HTML5_FMT.TIME);
+        this.endValue = startInputMoment.add(durationInputMoment).format(moment.HTML5_FMT.TIME);
 
-      } else if (startEntryMoment.isValid()) {
+      } else if (startInputMoment.isValid()) {
 
-        this.startPlan = startEntryMoment.format(moment.HTML5_FMT.TIME);
-        this.durationPlan = '--:--';
-        this.endPlan = '--:--';
-        
+        this.startValue = startInputMoment.format(moment.HTML5_FMT.TIME);
+        this.durationValue = '--:--';
+        this.endValue = '--:--';
+
       }
 
     },
     adjustStats: function () {
-      var startEntryMoment = moment(this.startPlan, moment.HTML5_FMT.TIME);
-      var durationEntryMoment = moment.duration(this.durationPlan);
+      var startInputMoment = moment(this.startValue, moment.HTML5_FMT.TIME);
+      var durationInputMoment = moment.duration(this.durationValue);
 
-      if (_.trim(this.startEntry) !== '' && startEntryMoment.isValid()) {
+      if (_.trim(this.startInput) !== '' && startInputMoment.isValid()) {
 
-        var tillNowDuration = moment.duration(moment().diff(startEntryMoment));
+        var tillNowDuration = moment.duration(moment().diff(startInputMoment));
         this.currentDuration = tillNowDuration.format(moment.HTML5_FMT.TIME, {
           trim: false
         });
 
-        if (_.trim(this.durationEntry) !== '' && durationEntryMoment.isValid()) {
-          this.diffDuration = tillNowDuration.subtract(durationEntryMoment).format(moment.HTML5_FMT.TIME, {
+        if (_.trim(this.durationInput) !== '' && durationInputMoment.isValid()) {
+          this.diffDuration = tillNowDuration.subtract(durationInputMoment).format(moment.HTML5_FMT.TIME, {
             trim: false
           });
         }
@@ -103,6 +103,23 @@ new Vue({
         this.diffDuration = '--:--';
         this.status = '-';
       }
+    },
+    addjustFieldVisibilty: function(field) {
+
+      if(_.startsWith(field, 'end')) {
+        if(_.trim(this.startInput) !== '' && _.trim(this.durationInput) !== '') {
+          if(_.endsWith(field, 'Input')) {
+            return { display: 'none'};
+          } else {
+            return {};
+          }
+        }
+      }
+
+      if(_.endsWith(field, 'Value')) {
+        return { display: 'none'};
+      }
+      return {};
     }
   },
   mounted: function () {

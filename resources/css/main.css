@@ -26,6 +26,10 @@ section {
   padding: 80px 0;
 }
 
+.hidden {
+  display: none;
+}
+
 /* Headings */
 
 /* Headings ------------------------------------ */
@@ -269,17 +273,12 @@ header .logo {
   box-shadow: 0 2px 2px #ededed;
 }
 
-.day-box-entries {
+.day-box-plan {
   border: 2px solid #8FBC50;
 }
 
-.day-box-stats,
-.day-box-plan {
+.day-box-stats {
   border: 2px solid #BA9857;
-}
-
-.day-box-plan input {
-  pointer-events: none;
 }
 
 .day-box div {

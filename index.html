@@ -45,7 +45,7 @@
       <div class="hero-text-box">
         <h1>Your greatest resource<br /> is your time.</h1>
         <a class="btn btn-full" href="#day">I’m ready</a>
-        <a class="btn btn-ghost" href="#features">Show me more</a>
+        <a class="btn btn-ghost show-button" href="#features">Show me more</a>
       </div>
 
     </header>
@@ -74,44 +74,30 @@
       <div class="row">
 
         <div class="col span-1-of-3">
-          <div class="day-box day-box-entries">
-            <div>
-              <h3>Entries</h3>
-            </div>
-            <div>
-              <label for="startEntry">Start</label>
-              <input type="text" name="startEntry" id="startEntry" placeholder="Start Time" required v-model="startEntry"
-                @blur="calculateTime">
-            </div>
-            <div>
-              <label for="durationEntry">Duration</label>
-              <input type="text" name="durationEntry" id="durationEntry" placeholder="Duration" required v-model="durationEntry"
-                @blur="calculateTime">
-            </div>
-            <div>
-              <label for="endEntry">End</label>
-              <input type="text" name="endEntry" id="endEntry" placeholder="End Time" required v-model="endEntry" @blur="calculateTime">
-            </div>
-            <div></div>
-          </div>
-        </div>
-
-        <div class="col span-1-of-3">
           <div class="day-box day-box-plan">
             <div>
               <h3>Plan</h3>
             </div>
             <div>
-              <span class="display-label">Start</span>
-              <span class="display-value">{{startPlan}}</span>
+              <label for="startInput">Start</label>
+              <input type="text" name="startInput" id="startInput" placeholder="Start Time" required 
+                v-model="startInput" :style="addjustFieldVisibilty('startInput')" @blur="calculateTime">
+              <span class="display-value" 
+                :style="addjustFieldVisibilty('startValue')">{{startValue}}</span>
             </div>
             <div>
-              <span class="display-label">Duration</span>
-              <span class="display-value">{{durationPlan}}</span>
+              <label for="durationInput">Duration</label>
+              <input type="text" name="durationInput" id="durationInput" placeholder="Duration" required
+                v-model="durationInput" :style="addjustFieldVisibilty('durationInput')" @blur="calculateTime">
+              <span class="display-value" 
+                :style="addjustFieldVisibilty('durationValue')">{{durationValue}}</span>
             </div>
             <div>
-              <span class="display-label">End</span>
-              <span class="display-value">{{endPlan}}</span>
+              <label for="endInput">End</label>
+              <input type="text" name="endInput" id="endInput" placeholder="End Time" required 
+                v-model="endInput" :style="addjustFieldVisibilty('endInput')" @blur="calculateTime">
+              <span class="display-value" 
+                :style="addjustFieldVisibilty('endValue')">{{endValue}}</span>
             </div>
             <div></div>
           </div>
@@ -139,7 +125,10 @@
         </div>
 
       </div>
+
     </section>
+
+
 
     <!--
       <section class="section-week" id="week">
