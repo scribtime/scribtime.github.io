@@ -86,8 +86,9 @@
             </div>
             <div>
               <label for="durationInput">Duration</label>
-              <input type="text" name="durationInput" id="durationInput" placeholder="Duration in 00:00 or 0.0" required v-model="duration.input"
-                :style="visibility(duration.inputEnabled)" @input="calculateTime" @change="adjustTime">
+              <input type="text" name="durationInput" id="durationInput" placeholder="Duration in 00:00 or 0.0"
+                required v-model="duration.input" :style="visibility(duration.inputEnabled)" @input="calculateTime"
+                @change="adjustTime">
               <span class="display-value" :style="visibility(!duration.inputEnabled)">{{duration.value}}</span>
             </div>
             <div>
@@ -106,16 +107,16 @@
               <h3>Stats</h3>
             </div>
             <div>
-              <span class="display-label">Status</span>
-              <span class="display-value">{{statusValue}}</span>
-            </div>
-            <div>
-              <span class="display-label">Current Duration</span>
+              <span class="display-label">Real Duration</span>
               <span class="display-value">{{currentDurationValue}}</span>
             </div>
             <div>
-              <span class="display-label">Duration Difference</span>
+              <span class="display-label">Difference to Plan</span>
               <span class="display-value">{{diffDurationValue}}</span>
+            </div>
+            <div>
+              <span class="display-label">Status</span>
+              <span class="display-value">{{statusValue}}</span>
             </div>
             <div></div>
           </div>
