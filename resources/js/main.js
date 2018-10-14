@@ -126,6 +126,25 @@ new Vue({
       this.adjustStats();
 
     },
+    adjustTime() {
+      
+      var startMoment = this.toMoment(this.start.input);
+      var durationDuration = this.toDuration(this.duration.input);
+      var endMoment = this.toMoment(this.end.input);
+
+      if(startMoment.isValid()) {
+        this.start.input = startMoment.format(moment.HTML5_FMT.TIME);
+      }
+      if(durationDuration.isValid()) {
+        this.duration.input = durationDuration.format(moment.HTML5_FMT.TIME, {
+          trim: false
+        });
+      }
+      if(endMoment.isValid()) {
+        this.end.input = endMoment.format(moment.HTML5_FMT.TIME);
+      }
+
+    },
     toMoment(value) {
       if(_.trim(value) === '') {
         return moment.invalid();
@@ -139,32 +158,48 @@ new Vue({
         return moment.duration(value + ':00');
       } else if (/^\d+?\.\d+$/.test(value)) {
         return moment.duration(parseFloat(value), 'hours');
+      } else if (/^\d+?:\d+(:\d+)?$/.test(value)) {
+        return moment.duration(value);
       }
-      return moment.duration(value);
+      return moment.invalid();
     },
     adjustStats: function () {
 
       var startMoment = this.toMoment(this.start.value);
       var durationDuration = this.toDuration(this.duration.value);
+      var endInputMoment = this.toMoment(this.end.input);
 
       if (startMoment.isValid() && startMoment.isBefore(moment())) {
 
-        var tillNowDuration = moment.duration(moment().diff(startMoment));
-        this.currentDurationValue = tillNowDuration.format(moment.HTML5_FMT.TIME, {
+        var tillFixedEndOrNow = moment.duration(moment().diff(startMoment));
+        if(endInputMoment.isValid()) {
+          tillFixedEndOrNow = moment.duration(endInputMoment.diff(startMoment));
+        }
+
+
+        this.currentDurationValue = tillFixedEndOrNow.format(moment.HTML5_FMT.TIME, {
           trim: false
         });
 
         if (durationDuration.isValid()) {
-          var diffDuration = tillNowDuration.clone().subtract(durationDuration);
+          var diffDuration = tillFixedEndOrNow.clone().subtract(durationDuration);
           this.diffDurationValue = diffDuration.format(moment.HTML5_FMT.TIME, {
             trim: false
           });
           
-          if(tillNowDuration.asMinutes() <= durationDuration.asMinutes()) {
-            this.statusValue = 'stop in ' + moment.duration(diffDuration.asMinutes()*-1, 'minutes').format('h [hours], m [minutes]');
+          var tillNowHours = parseFloat(tillFixedEndOrNow.format('h', 2));
+          var durationHours = parseFloat(durationDuration.format('h', 2));
+
+          var percentage = tillNowHours * (100 / durationHours);
+          percentage = (percentage === Infinity) ? 0 : percentage;
+
+          this.statusValue = percentage.toFixed(2) + ' % : ' + tillNowHours.toFixed(2) + ' of ' + durationHours.toFixed(2) + '';
+
+          if(endInputMoment.isValid() && tillNowHours === durationHours) {
+            this.heroText = 'just in time';
+          } else if(tillFixedEndOrNow.asMinutes() <= durationDuration.asMinutes()) {
             this.heroText = 'time to stop in<br/>' + moment.duration(diffDuration.asMinutes()*-1, 'minutes').format('h [hours], m [minutes]');
           } else {
-            this.statusValue = 'exceeded by ' + diffDuration.format('h [hours], m [minutes]');
             this.heroText = 'time exceeded by<br/>' + diffDuration.format('h [hours], m [minutes]');
           }
 

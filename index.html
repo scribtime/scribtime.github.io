@@ -80,20 +80,20 @@
             </div>
             <div>
               <label for="startInput">Start</label>
-              <input type="text" name="startInput" id="startInput" placeholder="Start Time" required v-model="start.input"
-                :style="visibility(start.inputEnabled)" @input="calculateTime">
+              <input type="text" name="startInput" id="startInput" placeholder="Start Time in 00:00" required v-model="start.input"
+                :style="visibility(start.inputEnabled)" @input="calculateTime" @change="adjustTime">
               <span class="display-value" :style="visibility(!start.inputEnabled)">{{start.value}}</span>
             </div>
             <div>
               <label for="durationInput">Duration</label>
-              <input type="text" name="durationInput" id="durationInput" placeholder="Duration" required v-model="duration.input"
-                :style="visibility(duration.inputEnabled)" @input="calculateTime">
+              <input type="text" name="durationInput" id="durationInput" placeholder="Duration in 00:00 or 0.0" required v-model="duration.input"
+                :style="visibility(duration.inputEnabled)" @input="calculateTime" @change="adjustTime">
               <span class="display-value" :style="visibility(!duration.inputEnabled)">{{duration.value}}</span>
             </div>
             <div>
               <label for="endInput">End</label>
-              <input type="text" name="endInput" id="endInput" placeholder="End Time" required v-model="end.input"
-                :style="visibility(end.inputEnabled)" @input="calculateTime">
+              <input type="text" name="endInput" id="endInput" placeholder="End Time in 00:00" required v-model="end.input"
+                :style="visibility(end.inputEnabled)" @input="calculateTime" @change="adjustTime">
               <span class="display-value" :style="visibility(!end.inputEnabled)">{{end.value}}</span>
             </div>
             <div></div>
