@@ -36,15 +36,25 @@ new Vue({
     date: moment().format('l'),
     hours: moment().hours(),
     minutes: moment().minutes(),
-    startInput: '',
-    durationInput: '',
-    endInput: '',
-    startValue: '--:--',
-    durationValue: '--:--',
-    endValue: '--:--',
-    currentDuration: '--:--',
-    diffDuration: '--:--',
-    status: '-'
+    start: {
+      input: '',
+      value: '--:--',
+      inputEnabled: true
+    },
+    duration: {
+      input: '',
+      value: '--:--',
+      inputEnabled: true
+    },
+    end: {
+      input: '',
+      value: '--:--',
+      inputEnabled : true
+    },
+    currentDurationValue: '--:--',
+    diffDurationValue: '--:--',
+    statusValue: '-',
+    heroText: 'Your greatest resource<br /> is your time.'
   },
   methods: {
     loadTime: function () {
@@ -61,72 +71,138 @@ new Vue({
     },
     calculateTime: function () {
 
-      var startInputMoment = moment(this.startInput, moment.HTML5_FMT.TIME);
-      var durationInputMoment = moment.duration(this.durationInput);
+      var startMoment = this.toMoment(this.start.input);
+      var durationDuration = this.toDuration(this.duration.input);
+      var endMoment = this.toMoment(this.end.input);
 
-      if (_.trim(this.startInput) !== '' && startInputMoment.isValid() && _.trim(this.durationInput) !== '' && durationInputMoment.isValid()) {
+      if (startMoment.isValid() && durationDuration.isValid()) {
 
-        this.startValue = startInputMoment.format(moment.HTML5_FMT.TIME);
-        this.durationValue = durationInputMoment.format(moment.HTML5_FMT.TIME, {
+        this.start.value = startMoment.format(moment.HTML5_FMT.TIME);
+        this.duration.value = durationDuration.format(moment.HTML5_FMT.TIME, {
           trim: false
         });
-        this.endValue = startInputMoment.add(durationInputMoment).format(moment.HTML5_FMT.TIME);
+        this.end.value = startMoment.add(durationDuration).format(moment.HTML5_FMT.TIME);
+        this.end.inputEnabled = false;
 
-      } else if (startInputMoment.isValid()) {
+      } else if (startMoment.isValid() && endMoment.isValid()) {
 
-        this.startValue = startInputMoment.format(moment.HTML5_FMT.TIME);
-        this.durationValue = '--:--';
-        this.endValue = '--:--';
+        this.start.value = startMoment.format(moment.HTML5_FMT.TIME);
+        this.duration.value = moment.duration(endMoment.diff(startMoment)).format(moment.HTML5_FMT.TIME, {
+          trim: false
+        });
+        this.end.value = endMoment.format(moment.HTML5_FMT.TIME);
+        this.duration.inputEnabled = false;
+
+      } else if(startMoment.isValid()) {
+        
+        this.start.value = startMoment.format(moment.HTML5_FMT.TIME);
+        this.duration.value = '--:--';
+        this.end.value = '--:--';
+
+        this.end.inputEnabled = true;
+        this.duration.inputEnabled = true;
+
+      } else if(durationDuration.isValid() && endMoment.isValid()) {
+
+        this.start.value = endMoment.subtract(durationDuration).format(moment.HTML5_FMT.TIME);
+        this.duration.value = durationDuration.format(moment.HTML5_FMT.TIME, {
+          trim: false
+        });
+        this.end.value = endMoment.format(moment.HTML5_FMT.TIME);
+        this.start.inputEnabled = false;
+
+      } else {
+
+        this.start.value = '--:--';
+        this.duration.value = '--:--';
+        this.end.value = '--:--';
+
+        this.start.inputEnabled = true;
+        this.duration.inputEnabled = true;
+        this.end.inputEnabled = true;
 
       }
 
+      this.adjustStats();
+
+    },
+    toMoment(value) {
+      if(_.trim(value) === '') {
+        return moment.invalid();
+      }
+      return moment(value, moment.HTML5_FMT.TIME);
+    },
+    toDuration(value) {
+      if(_.trim(value) === '' || value === '--:--') {
+        return moment.duration.invalid();
+      } else if(/^\d+$/.test(value)) {
+        return moment.duration(value + ':00');
+      } else if (/^\d+?\.\d+$/.test(value)) {
+        return moment.duration(parseFloat(value), 'hours');
+      }
+      return moment.duration(value);
     },
     adjustStats: function () {
-      var startInputMoment = moment(this.startValue, moment.HTML5_FMT.TIME);
-      var durationInputMoment = moment.duration(this.durationValue);
 
-      if (_.trim(this.startInput) !== '' && startInputMoment.isValid()) {
+      var startMoment = this.toMoment(this.start.value);
+      var durationDuration = this.toDuration(this.duration.value);
 
-        var tillNowDuration = moment.duration(moment().diff(startInputMoment));
-        this.currentDuration = tillNowDuration.format(moment.HTML5_FMT.TIME, {
+      if (startMoment.isValid() && startMoment.isBefore(moment())) {
+
+        var tillNowDuration = moment.duration(moment().diff(startMoment));
+        this.currentDurationValue = tillNowDuration.format(moment.HTML5_FMT.TIME, {
           trim: false
         });
 
-        if (_.trim(this.durationInput) !== '' && durationInputMoment.isValid()) {
-          this.diffDuration = tillNowDuration.subtract(durationInputMoment).format(moment.HTML5_FMT.TIME, {
+        if (durationDuration.isValid()) {
+          var diffDuration = tillNowDuration.clone().subtract(durationDuration);
+          this.diffDurationValue = diffDuration.format(moment.HTML5_FMT.TIME, {
             trim: false
           });
+          
+          if(tillNowDuration.asMinutes() <= durationDuration.asMinutes()) {
+            this.statusValue = 'stop in ' + moment.duration(diffDuration.asMinutes()*-1, 'minutes').format('h [hours], m [minutes]');
+            this.heroText = 'time to stop in<br/>' + moment.duration(diffDuration.asMinutes()*-1, 'minutes').format('h [hours], m [minutes]');
+          } else {
+            this.statusValue = 'exceeded by ' + diffDuration.format('h [hours], m [minutes]');
+            this.heroText = 'time exceeded by<br/>' + diffDuration.format('h [hours], m [minutes]');
+          }
+
+        } else {
+          this.statusValue = '-';
+          this.heroText = 'Your greatest resource<br/> is your time.'
         }
 
       } else {
-        this.currentDuration = '--:--';
-        this.diffDuration = '--:--';
-        this.status = '-';
+
+        this.currentDurationValue = '--:--';
+        this.diffDurationValue = '--:--';
+
+        if(startMoment.isValid() && startMoment.isAfter(moment())) {
+          this.statusValue = 'starts in ' + moment.duration(startMoment.diff(moment())).format('h [hours], m [minutes]');
+          this.heroText = 'Your greatest resource<br/> is your time.';
+        } else {
+          this.statusValue = '-';
+          this.heroText = 'Your greatest resource<br/> is your time.';
+        }
+
       }
     },
-    addjustFieldVisibilty: function(field) {
-
-      if(_.startsWith(field, 'end')) {
-        if(_.trim(this.startInput) !== '' && _.trim(this.durationInput) !== '') {
-          if(_.endsWith(field, 'Input')) {
-            return { display: 'none'};
-          } else {
-            return {};
-          }
-        }
+    visibility(show) {
+      if(show) {
+        return {};
       }
-
-      if(_.endsWith(field, 'Value')) {
-        return { display: 'none'};
-      }
-      return {};
+      return { display: 'none'};
     }
   },
   mounted: function () {
     this.loadTime();
     this.interval = setInterval(function () {
+      var originalTime = this.time;
       this.loadTime();
-      this.adjustStats();
+      if(originalTime !== this.time) {
+        this.adjustStats();
+      }
     }.bind(this), 1000);
   },
   beforeDestory: function () {

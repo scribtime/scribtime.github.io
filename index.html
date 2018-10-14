@@ -43,7 +43,7 @@
       </nav>
 
       <div class="hero-text-box">
-        <h1>Your greatest resource<br /> is your time.</h1>
+        <h1 v-html="heroText">Your greatest resource<br /> is your time.</h1>
         <a class="btn btn-full" href="#day">I’m ready</a>
         <a class="btn btn-ghost show-button" href="#features">Show me more</a>
       </div>
@@ -80,24 +80,21 @@
             </div>
             <div>
               <label for="startInput">Start</label>
-              <input type="text" name="startInput" id="startInput" placeholder="Start Time" required 
-                v-model="startInput" :style="addjustFieldVisibilty('startInput')" @blur="calculateTime">
-              <span class="display-value" 
-                :style="addjustFieldVisibilty('startValue')">{{startValue}}</span>
+              <input type="text" name="startInput" id="startInput" placeholder="Start Time" required v-model="start.input"
+                :style="visibility(start.inputEnabled)" @input="calculateTime">
+              <span class="display-value" :style="visibility(!start.inputEnabled)">{{start.value}}</span>
             </div>
             <div>
               <label for="durationInput">Duration</label>
-              <input type="text" name="durationInput" id="durationInput" placeholder="Duration" required
-                v-model="durationInput" :style="addjustFieldVisibilty('durationInput')" @blur="calculateTime">
-              <span class="display-value" 
-                :style="addjustFieldVisibilty('durationValue')">{{durationValue}}</span>
+              <input type="text" name="durationInput" id="durationInput" placeholder="Duration" required v-model="duration.input"
+                :style="visibility(duration.inputEnabled)" @input="calculateTime">
+              <span class="display-value" :style="visibility(!duration.inputEnabled)">{{duration.value}}</span>
             </div>
             <div>
               <label for="endInput">End</label>
-              <input type="text" name="endInput" id="endInput" placeholder="End Time" required 
-                v-model="endInput" :style="addjustFieldVisibilty('endInput')" @blur="calculateTime">
-              <span class="display-value" 
-                :style="addjustFieldVisibilty('endValue')">{{endValue}}</span>
+              <input type="text" name="endInput" id="endInput" placeholder="End Time" required v-model="end.input"
+                :style="visibility(end.inputEnabled)" @input="calculateTime">
+              <span class="display-value" :style="visibility(!end.inputEnabled)">{{end.value}}</span>
             </div>
             <div></div>
           </div>
@@ -109,16 +106,16 @@
               <h3>Stats</h3>
             </div>
             <div>
+              <span class="display-label">Status</span>
+              <span class="display-value">{{statusValue}}</span>
+            </div>
+            <div>
               <span class="display-label">Current Duration</span>
-              <span class="display-value">{{currentDuration}}</span>
+              <span class="display-value">{{currentDurationValue}}</span>
             </div>
             <div>
               <span class="display-label">Duration Difference</span>
-              <span class="display-value">{{diffDuration}}</span>
-            </div>
-            <div>
-              <span class="display-label">Status</span>
-              <span class="display-value">{{status}}</span>
+              <span class="display-value">{{diffDurationValue}}</span>
             </div>
             <div></div>
           </div>
