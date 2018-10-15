@@ -47,7 +47,7 @@ new Vue({
         value: '--:--',
         inputEnabled: true
       },
-      duration: {
+      hours: {
         input: '',
         value: '--:--',
         inputEnabled: true
@@ -57,8 +57,8 @@ new Vue({
         value: '--:--',
         inputEnabled: true
       },
-      realDurationValue: '--:--',
-      diffDurationValue: '--:--',
+      realHoursValue: '--:--',
+      diffHoursValue: '--:--',
       statusValue: '-',
       heroText: 'Your greatest resource<br /> is your time.',
       fullDateFormat: fullDateFormat
@@ -79,41 +79,41 @@ new Vue({
     },
     calculateTime: function () {
 
-      var startMoment = this.toMoment(this.start.input);
-      var durationDuration = this.toDuration(this.duration.input);
-      var endMoment = this.toMoment(this.end.input);
+      var startMoment = this.toDateTimeMoment(this.start.input);
+      var hoursDuration = this.toHoursDuration(this.hours.input);
+      var endMoment = this.toDateTimeMoment(this.end.input);
 
-      if (startMoment.isValid() && durationDuration.isValid()) {
+      if (startMoment.isValid() && hoursDuration.isValid()) {
 
         this.start.value = this.formatMoment(startMoment);
-        this.duration.value = durationDuration.format(moment.HTML5_FMT.TIME, {
+        this.hours.value = hoursDuration.format(moment.HTML5_FMT.TIME, {
           trim: false
         });
-        this.end.value = this.formatMoment(startMoment.add(durationDuration));
+        this.end.value = this.formatMoment(startMoment.add(hoursDuration));
         this.end.inputEnabled = false;
 
       } else if (startMoment.isValid() && endMoment.isValid()) {
 
         this.start.value = this.formatMoment(startMoment);
-        this.duration.value = moment.duration(endMoment.diff(startMoment)).format(moment.HTML5_FMT.TIME, {
+        this.hours.value = moment.duration(endMoment.diff(startMoment)).format(moment.HTML5_FMT.TIME, {
           trim: false
         });
         this.end.value = this.formatMoment(endMoment);
-        this.duration.inputEnabled = false;
+        this.hours.inputEnabled = false;
 
       } else if (startMoment.isValid()) {
 
         this.start.value = this.formatMoment(startMoment);
-        this.duration.value = '--:--';
+        this.hours.value = '--:--';
         this.end.value = '--:--';
 
         this.end.inputEnabled = true;
-        this.duration.inputEnabled = true;
+        this.hours.inputEnabled = true;
 
-      } else if (durationDuration.isValid() && endMoment.isValid()) {
+      } else if (hoursDuration.isValid() && endMoment.isValid()) {
 
-        this.start.value = this.formatMoment(endMoment.subtract(durationDuration));
-        this.duration.value = durationDuration.format(moment.HTML5_FMT.TIME, {
+        this.start.value = this.formatMoment(endMoment.subtract(hoursDuration));
+        this.hours.value = hoursDuration.format(moment.HTML5_FMT.TIME, {
           trim: false
         });
         this.end.value = this.formatMoment(endMoment);
@@ -122,11 +122,11 @@ new Vue({
       } else {
 
         this.start.value = '--:--';
-        this.duration.value = '--:--';
+        this.hours.value = '--:--';
         this.end.value = '--:--';
 
         this.start.inputEnabled = true;
-        this.duration.inputEnabled = true;
+        this.hours.inputEnabled = true;
         this.end.inputEnabled = true;
 
       }
@@ -136,16 +136,16 @@ new Vue({
     },
     adjustTime() {
 
-      var startMoment = this.toMoment(this.start.input);
-      var durationDuration = this.toDuration(this.duration.input);
-      var endMoment = this.toMoment(this.end.input);
+      var startMoment = this.toDateTimeMoment(this.start.input);
+      var hoursDuration = this.toHoursDuration(this.hours.input);
+      var endMoment = this.toDateTimeMoment(this.end.input);
 
       
       if (startMoment.isValid()) {
         this.start.input = this.formatMoment(startMoment);
       }
-      if (durationDuration.isValid()) {
-        this.duration.input = durationDuration.format(moment.HTML5_FMT.TIME, {
+      if (hoursDuration.isValid()) {
+        this.hours.input = hoursDuration.format(moment.HTML5_FMT.TIME, {
           trim: false
         });
       }
@@ -154,7 +154,7 @@ new Vue({
       }
 
     },
-    toMoment(stringValue) {
+    toDateTimeMoment(stringValue) {
       if (_.trim(stringValue) === '') {
         return moment.invalid();
       }
@@ -170,7 +170,7 @@ new Vue({
       }
       return momentValue.format(this.fullDateFormat);
     },
-    toDuration(value) {
+    toHoursDuration(value) {
       if (_.trim(value) === '' || value === '--:--') {
         return moment.duration.invalid();
       } else if (/^\d+$/.test(value)) {
@@ -184,42 +184,41 @@ new Vue({
     },
     adjustStats: function () {
 
-      var startMoment = this.toMoment(this.start.value);
-      var durationDuration = this.toDuration(this.duration.value);
-      var endInputMoment = this.toMoment(this.end.input);
+      var startMoment = this.toDateTimeMoment(this.start.value);
+      var hoursDuration = this.toHoursDuration(this.hours.value);
+      var endInputMoment = this.toDateTimeMoment(this.end.input);
 
       if (startMoment.isValid() && startMoment.isBefore(moment())) {
 
-        var tillFixedEndOrNow = moment.duration(moment().diff(startMoment));
+        var tillFixedEndOrNowDuration = moment.duration(moment().diff(startMoment));
         if (endInputMoment.isValid() && moment().isAfter(endInputMoment)) {
-          tillFixedEndOrNow = moment.duration(endInputMoment.diff(startMoment));
+          tillFixedEndOrNowDuration = moment.duration(endInputMoment.diff(startMoment));
         }
 
-
-        this.realDurationValue = tillFixedEndOrNow.format(moment.HTML5_FMT.TIME, {
+        this.realHoursValue = tillFixedEndOrNowDuration.format(moment.HTML5_FMT.TIME, {
           trim: false
         });
 
-        if (durationDuration.isValid()) {
-          var diffDuration = tillFixedEndOrNow.clone().subtract(durationDuration);
-          this.diffDurationValue = diffDuration.format(moment.HTML5_FMT.TIME, {
+        if (hoursDuration.isValid()) {
+          var diffHoursDuration = tillFixedEndOrNowDuration.clone().subtract(hoursDuration);
+          this.diffHoursValue = diffHoursDuration.format(moment.HTML5_FMT.TIME, {
             trim: false
           });
 
-          var tillNowHours = parseFloat(tillFixedEndOrNow.format('h', 2));
-          var durationHours = parseFloat(durationDuration.format('h', 2));
+          var tillNowHoursDuration = parseFloat(tillFixedEndOrNowDuration.format('h', 2));
+          var hoursDuration = parseFloat(hoursDuration.format('h', 2));
 
-          var percentage = tillNowHours * (100 / durationHours);
+          var percentage = tillNowHoursDuration * (100 / hoursDuration);
           percentage = (percentage === Infinity) ? 0 : percentage;
 
-          this.statusValue = percentage.toFixed(2) + ' % : ' + tillNowHours.toFixed(2) + ' of ' + durationHours.toFixed(2) + '';
+          this.statusValue = percentage.toFixed(2) + ' % : ' + tillNowHoursDuration.toFixed(2) + ' of ' + hoursDuration.toFixed(2) + '';
 
-          if (endInputMoment.isValid() && moment().isAfter(endInputMoment) && tillNowHours === durationHours) {
+          if (endInputMoment.isValid() && moment().isAfter(endInputMoment) && tillNowHoursDuration === hoursDuration) {
             this.heroText = 'just in time';
-          } else if (tillFixedEndOrNow.asMinutes() <= durationDuration.asMinutes()) {
-            this.heroText = 'time to stop in<br/>' + moment.duration(diffDuration.asMinutes() * -1, 'minutes').format('h [hours], m [minutes]');
+          } else if (tillFixedEndOrNowDuration.asMinutes() <= hoursDuration.asMinutes()) {
+            this.heroText = 'time to stop in<br/>' + moment.duration(diffHoursDuration.asMinutes() * -1, 'minutes').format('h [hours], m [minutes]');
           } else {
-            this.heroText = 'time exceeded by<br/>' + diffDuration.format('h [hours], m [minutes]');
+            this.heroText = 'time exceeded by<br/>' + diffHoursDuration.format('h [hours], m [minutes]');
           }
 
         } else {
@@ -229,8 +228,8 @@ new Vue({
 
       } else {
 
-        this.realDurationValue = '--:--';
-        this.diffDurationValue = '--:--';
+        this.realHoursValue = '--:--';
+        this.diffHoursValue = '--:--';
 
         if (startMoment.isValid() && startMoment.isAfter(moment())) {
           this.statusValue = 'starts in ' + moment.duration(startMoment.diff(moment())).format('h [hours], m [minutes]');

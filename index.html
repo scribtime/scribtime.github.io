@@ -85,11 +85,11 @@
               <span class="display-value" :style="visibility(!start.inputEnabled)">{{start.value}}</span>
             </div>
             <div>
-              <label for="durationInput">Planned Duration</label>
-              <input type="text" name="durationInput" id="durationInput" placeholder="Duration in 00:00 or 0.0"
-                required v-model="duration.input" :style="visibility(duration.inputEnabled)" @input="calculateTime"
+              <label for="hoursInput">Planned Hours</label>
+              <input type="text" name="hoursInput" id="hoursInput" placeholder="Hours in 00:00 or 0.0"
+                required v-model="hours.input" :style="visibility(hours.inputEnabled)" @input="calculateTime"
                 @change="adjustTime">
-              <span class="display-value" :style="visibility(!duration.inputEnabled)">{{duration.value}}</span>
+              <span class="display-value" :style="visibility(!hours.inputEnabled)">{{hours.value}}</span>
             </div>
             <div>
               <label for="endInput">End</label>
@@ -107,12 +107,12 @@
               <h3>Stats</h3>
             </div>
             <div>
-              <span class="display-label">Real Duration</span>
-              <span class="display-value">{{realDurationValue}}</span>
+              <span class="display-label">Real Hours</span>
+              <span class="display-value">{{realHoursValue}}</span>
             </div>
             <div>
-              <span class="display-label">Difference</span>
-              <span class="display-value">{{diffDurationValue}}</span>
+              <span class="display-label">Hours Difference</span>
+              <span class="display-value">{{diffHoursValue}}</span>
             </div>
             <div>
               <span class="display-label">Status</span>
@@ -155,8 +155,6 @@
       </div>
     </footer>
   </div>
-
-
 
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
