@@ -21,10 +21,10 @@
     <header>
       <nav>
         <div class="row">
-          <header-clock :hours="hours" :minutes="minutes"></header-clock>
+          <header-clock :hours="currentHours" :minutes="currentMinutes"></header-clock>
           <div class="logo">
-            <header-date :date="date"></header-date> -
-            <header-time :time="time"></header-time>
+            <header-date :date="currentDate"></header-date> -
+            <header-time :time="currentTime"></header-time>
           </div>
           <ul class="main-nav">
             <!--
@@ -69,7 +69,7 @@
 
     <section class="section-day" id="day">
       <div class="row">
-        <h2>Day - {{date}}</h2>
+        <h2>Day - {{currentDate}}</h2>
       </div>
       <div class="row">
 
@@ -85,11 +85,11 @@
               <span class="display-value" :style="visibility(!start.inputEnabled)">{{start.value}}</span>
             </div>
             <div>
-              <label for="hoursInput">Planned Hours</label>
-              <input type="text" name="hoursInput" id="hoursInput" placeholder="Hours in 00:00 or 0.0"
-                required v-model="hours.input" :style="visibility(hours.inputEnabled)" @input="calculateTime"
+              <label for="plannedHoursInput">Planned Hours</label>
+              <input type="text" name="plannedHoursInput" id="plannedHoursInput" placeholder="Hours in 00:00 or 0.0"
+                required v-model="plannedHours.input" :style="visibility(plannedHours.inputEnabled)" @input="calculateTime"
                 @change="adjustTime">
-              <span class="display-value" :style="visibility(!hours.inputEnabled)">{{hours.value}}</span>
+              <span class="display-value" :style="visibility(!plannedHours.inputEnabled)">{{plannedHours.value}}</span>
             </div>
             <div>
               <label for="endInput">End</label>
