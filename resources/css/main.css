@@ -273,11 +273,11 @@ header .logo {
   box-shadow: 0 2px 2px #ededed;
 }
 
-.day-box-plan {
+.day-box-entries {
   border: 2px solid #8FBC50;
 }
 
-.day-box-stats {
+.day-box-info {
   border: 2px solid #BA9857;
 }
 

@@ -74,49 +74,46 @@
       <div class="row">
 
         <div class="col span-1-of-3">
-          <div class="day-box day-box-plan">
+          <div class="day-box day-box-entries">
             <div>
-              <h3>Plan</h3>
+              <h3>Entries</h3>
             </div>
             <div>
               <label for="startInput">Start</label>
-              <input type="text" name="startInput" id="startInput" placeholder="Start Time in 00:00" required v-model="start.input"
-                :style="visibility(start.inputEnabled)" @input="calculateTime" @change="adjustTime">
-              <span class="display-value" :style="visibility(!start.inputEnabled)">{{start.value}}</span>
+              <input type="text" name="startInput" id="startInput" :placeholder="start.value" required v-model="start.input"
+                @input="calculateTime" @change="adjustTime">
             </div>
             <div>
               <label for="plannedHoursInput">Planned Hours</label>
-              <input type="text" name="plannedHoursInput" id="plannedHoursInput" placeholder="Hours in 00:00 or 0.0"
-                required v-model="plannedHours.input" :style="visibility(plannedHours.inputEnabled)" @input="calculateTime"
+              <input type="text" name="plannedHoursInput" id="plannedHoursInput" :placeholder="plannedHours.value"
+                required v-model="plannedHours.input" @input="calculateTime"
                 @change="adjustTime">
-              <span class="display-value" :style="visibility(!plannedHours.inputEnabled)">{{plannedHours.value}}</span>
             </div>
             <div>
               <label for="endInput">End</label>
-              <input type="text" name="endInput" id="endInput" placeholder="End Time in 00:00" required v-model="end.input"
-                :style="visibility(end.inputEnabled)" @input="calculateTime" @change="adjustTime">
-              <span class="display-value" :style="visibility(!end.inputEnabled)">{{end.value}}</span>
+              <input type="text" name="endInput" id="endInput" :placeholder="end.value" required v-model="end.input"
+                @input="calculateTime" @change="adjustTime">
             </div>
             <div></div>
           </div>
         </div>
 
         <div class="col span-1-of-3">
-          <div class="day-box day-box-stats">
+          <div class="day-box day-box-info">
             <div>
-              <h3>Stats</h3>
+              <h3>Infos</h3>
             </div>
             <div>
-              <span class="display-label">Real Hours</span>
-              <span class="display-value">{{realHoursValue}}</span>
-            </div>
-            <div>
-              <span class="display-label">Hours Difference</span>
-              <span class="display-value">{{diffHoursValue}}</span>
+              <span class="display-label">Hours</span>
+              <span class="display-value">{{planValue}}</span>
             </div>
             <div>
               <span class="display-label">Status</span>
               <span class="display-value">{{statusValue}}</span>
+            </div>
+            <div>
+              <span class="display-label">Progress</span>
+              <span class="display-value">{{progressValue}}</span>
             </div>
             <div></div>
           </div>

@@ -57,9 +57,9 @@ new Vue({
         value: '--:--',
         inputEnabled: true
       },
-      realHoursValue: '--:--',
-      diffHoursValue: '--:--',
+      planValue: '-',
       statusValue: '-',
+      progressValue: '-',
       heroText: 'Your greatest resource<br /> is your time.',
       fullDateFormat: fullDateFormat
     };
@@ -83,41 +83,41 @@ new Vue({
       var hoursDuration = this.toHoursDuration(this.plannedHours.input);
       var endMoment = this.toDateTimeMoment(this.end.input);
 
-      if (startMoment.isValid() && hoursDuration.isValid()) {
+      if (startMoment.isValid() && endMoment.isValid()) {
 
-        this.start.value = this.formatMoment(startMoment);
-        this.plannedHours.value = hoursDuration.format(moment.HTML5_FMT.TIME, {
-          trim: false
-        });
-        this.end.value = this.formatMoment(startMoment.add(hoursDuration));
-        this.end.inputEnabled = false;
-
-      } else if (startMoment.isValid() && endMoment.isValid()) {
-
-        this.start.value = this.formatMoment(startMoment);
+        this.start.value = this.formatDateTimeMoment(startMoment);
         this.plannedHours.value = moment.duration(endMoment.diff(startMoment)).format(moment.HTML5_FMT.TIME, {
           trim: false
         });
-        this.end.value = this.formatMoment(endMoment);
+        this.end.value = this.formatDateTimeMoment(endMoment);
         this.plannedHours.inputEnabled = false;
+
+      } else if (startMoment.isValid() && hoursDuration.isValid()) {
+
+        this.start.value = this.formatDateTimeMoment(startMoment);
+        this.plannedHours.value = hoursDuration.format(moment.HTML5_FMT.TIME, {
+          trim: false
+        });
+        this.end.value = this.formatDateTimeMoment(startMoment.add(hoursDuration));
+        this.end.inputEnabled = false;
+
+      } else if (hoursDuration.isValid() && endMoment.isValid()) {
+
+        this.start.value = this.formatDateTimeMoment(endMoment.subtract(hoursDuration));
+        this.plannedHours.value = hoursDuration.format(moment.HTML5_FMT.TIME, {
+          trim: false
+        });
+        this.end.value = this.formatDateTimeMoment(endMoment);
+        this.start.inputEnabled = false;
 
       } else if (startMoment.isValid()) {
 
-        this.start.value = this.formatMoment(startMoment);
+        this.start.value = this.formatDateTimeMoment(startMoment);
         this.plannedHours.value = '--:--';
         this.end.value = '--:--';
 
         this.end.inputEnabled = true;
         this.plannedHours.inputEnabled = true;
-
-      } else if (hoursDuration.isValid() && endMoment.isValid()) {
-
-        this.start.value = this.formatMoment(endMoment.subtract(hoursDuration));
-        this.plannedHours.value = hoursDuration.format(moment.HTML5_FMT.TIME, {
-          trim: false
-        });
-        this.end.value = this.formatMoment(endMoment);
-        this.start.inputEnabled = false;
 
       } else {
 
@@ -131,10 +131,10 @@ new Vue({
 
       }
 
-      this.adjustStats();
+      this.calculateInfosAndHeroText();
 
     },
-    adjustTime() {
+    adjustTime: function() {
 
       var startMoment = this.toDateTimeMoment(this.start.input);
       var hoursDuration = this.toHoursDuration(this.plannedHours.input);
@@ -142,7 +142,7 @@ new Vue({
 
       
       if (startMoment.isValid()) {
-        this.start.input = this.formatMoment(startMoment);
+        this.start.input = this.formatDateTimeMoment(startMoment);
       }
       if (hoursDuration.isValid()) {
         this.plannedHours.input = hoursDuration.format(moment.HTML5_FMT.TIME, {
@@ -150,11 +150,11 @@ new Vue({
         });
       }
       if (endMoment.isValid()) {
-        this.end.input = this.formatMoment(endMoment);
+        this.end.input = this.formatDateTimeMoment(endMoment);
       }
 
     },
-    toDateTimeMoment(stringValue) {
+    toDateTimeMoment: function(stringValue) {
       if (_.trim(stringValue) === '') {
         return moment.invalid();
       }
@@ -164,13 +164,24 @@ new Vue({
       }
       return moment(stringValue, moment.HTML5_FMT.TIME);
     },
-    formatMoment(momentValue) {
+    formatDateTimeMoment: function(momentValue) {
+      if(!momentValue.isValid()) {
+        return '--:--';
+      }
       if(momentValue.isSame(moment(), 'day')) {
         return momentValue.format(moment.HTML5_FMT.TIME);
       }
       return momentValue.format(this.fullDateFormat);
     },
-    toHoursDuration(value) {
+    formatDuration: function(durationValue) {
+      if(!durationValue.isValid()) {
+        return '--:--';
+      }
+      return durationValue.format(moment.HTML5_FMT.TIME, {
+        trim: false
+      });
+    },
+    toHoursDuration: function(value) {
       if (_.trim(value) === '' || value === '--:--') {
         return moment.duration.invalid();
       } else if (/^\d+$/.test(value)) {
@@ -182,66 +193,73 @@ new Vue({
       }
       return moment.invalid();
     },
-    adjustStats: function () {
+    calculateInfosAndHeroText: function () {
 
       var startMoment = this.toDateTimeMoment(this.start.value);
+      
       var hoursDuration = this.toHoursDuration(this.plannedHours.value);
+      var hoursInputDuration = this.toHoursDuration(this.plannedHours.input);
+      var plannedDuration = hoursInputDuration.isValid() ? hoursInputDuration : hoursDuration;
+
+      var endMoment = this.toDateTimeMoment(this.end.value);
       var endInputMoment = this.toDateTimeMoment(this.end.input);
 
       if (startMoment.isValid() && startMoment.isBefore(moment())) {
 
-        var tillFixedEndOrNowDuration = moment.duration(moment().diff(startMoment));
+        var tillNowDuration = moment.duration(moment().diff(startMoment));
+        var tillFixedEndOrNowDuration = tillNowDuration;
         if (endInputMoment.isValid() && moment().isAfter(endInputMoment)) {
           tillFixedEndOrNowDuration = moment.duration(endInputMoment.diff(startMoment));
         }
 
-        this.realHoursValue = tillFixedEndOrNowDuration.format(moment.HTML5_FMT.TIME, {
-          trim: false
-        });
+        this.planValue = this.formatDuration(hoursDuration) + ' h  [ from ' + this.formatDateTimeMoment(startMoment) + ' to ' + this.formatDateTimeMoment(endMoment) + ' ]';
 
-        if (hoursDuration.isValid()) {
-          var diffHoursDuration = tillFixedEndOrNowDuration.clone().subtract(hoursDuration);
-          this.diffHoursValue = diffHoursDuration.format(moment.HTML5_FMT.TIME, {
-            trim: false
-          });
+        if (plannedDuration.isValid()) {
 
+          var diffHoursDuration = tillFixedEndOrNowDuration.clone().subtract(plannedDuration);
           var tillNowHoursFloat = parseFloat(tillFixedEndOrNowDuration.format('h', 2));
-          var hoursFloat = parseFloat(hoursDuration.format('h', 2));
-
+          var hoursFloat = parseFloat(plannedDuration.format('h', 2));
+          
           var percentage = tillNowHoursFloat * (100 / hoursFloat);
           percentage = (percentage === Infinity) ? 0 : percentage;
-
-          this.statusValue = percentage.toFixed(2) + ' % : ' + tillNowHoursFloat.toFixed(2) + ' of ' + hoursFloat.toFixed(2) + '';
-
+          
+          this.progressValue = percentage.toFixed(2) + ' % [ ' + tillNowHoursFloat.toFixed(2) + ' h of ' + hoursFloat.toFixed(2) + ' h ]';
+          
+          var diffHoursText = '';
           if (endInputMoment.isValid() && moment().isAfter(endInputMoment) && tillNowHoursFloat === hoursFloat) {
             this.heroText = 'just in time';
-          } else if (tillFixedEndOrNowDuration.asMinutes() <= hoursDuration.asMinutes()) {
+            diffHoursText = ', just in time';
+          } else if (tillFixedEndOrNowDuration.asMinutes() <= plannedDuration.asMinutes()) {
             this.heroText = 'time to stop in<br/>' + moment.duration(diffHoursDuration.asMinutes() * -1, 'minutes').format('h [hours], m [minutes]');
+            diffHoursText = ', remaining ' + this.formatDuration(moment.duration(diffHoursDuration.asMinutes() * -1, 'minutes')) + ' h'
           } else {
             this.heroText = 'time exceeded by<br/>' + diffHoursDuration.format('h [hours], m [minutes]');
+            diffHoursText = ', exceeded by ' + this.formatDuration(diffHoursDuration);
           }
 
+          this.statusValue = this.formatDuration(tillFixedEndOrNowDuration) + ' h [ ' + this.formatDuration(plannedDuration) + ' h ' + diffHoursText + ' ]';
+
         } else {
-          this.statusValue = '-';
+          this.progressValue = '-';
           this.heroText = 'Your greatest resource<br/> is your time.'
         }
 
       } else {
 
-        this.realHoursValue = '--:--';
-        this.diffHoursValue = '--:--';
+        this.planValue = '-';
+        this.statusValue = '-';
 
         if (startMoment.isValid() && startMoment.isAfter(moment())) {
-          this.statusValue = 'starts in ' + moment.duration(startMoment.diff(moment())).format('h [hours], m [minutes]');
+          this.progressValue = 'starts in ' + moment.duration(startMoment.diff(moment())).format('h [hours], m [minutes]');
           this.heroText = 'Your greatest resource<br/> is your time.';
         } else {
-          this.statusValue = '-';
+          this.progressValue = '-';
           this.heroText = 'Your greatest resource<br/> is your time.';
         }
 
       }
     },
-    visibility(show) {
+    visibility: function(show) {
       if (show) {
         return {};
       }
@@ -254,7 +272,7 @@ new Vue({
       var originalTime = this.currentTime;
       this.loadTime();
       if (originalTime !== this.currentTime) {
-        this.adjustStats();
+        this.calculateInfosAndHeroText();
       }
     }.bind(this), 1000);
   },
