@@ -205,15 +205,15 @@ new Vue({
             trim: false
           });
 
-          var tillNowHoursDuration = parseFloat(tillFixedEndOrNowDuration.format('h', 2));
-          var hoursDuration = parseFloat(hoursDuration.format('h', 2));
+          var tillNowHours = parseFloat(tillFixedEndOrNowDuration.format('h', 2));
+          var hours = parseFloat(hoursDuration.format('h', 2));
 
-          var percentage = tillNowHoursDuration * (100 / hoursDuration);
+          var percentage = tillNowHours * (100 / hours);
           percentage = (percentage === Infinity) ? 0 : percentage;
 
-          this.statusValue = percentage.toFixed(2) + ' % : ' + tillNowHoursDuration.toFixed(2) + ' of ' + hoursDuration.toFixed(2) + '';
+          this.statusValue = percentage.toFixed(2) + ' % : ' + tillNowHours.toFixed(2) + ' of ' + hours.toFixed(2) + '';
 
-          if (endInputMoment.isValid() && moment().isAfter(endInputMoment) && tillNowHoursDuration === hoursDuration) {
+          if (endInputMoment.isValid() && moment().isAfter(endInputMoment) && tillNowHours === hours) {
             this.heroText = 'just in time';
           } else if (tillFixedEndOrNowDuration.asMinutes() <= hoursDuration.asMinutes()) {
             this.heroText = 'time to stop in<br/>' + moment.duration(diffHoursDuration.asMinutes() * -1, 'minutes').format('h [hours], m [minutes]');
