@@ -85,7 +85,7 @@
               <span class="display-value" :style="visibility(!start.inputEnabled)">{{start.value}}</span>
             </div>
             <div>
-              <label for="durationInput">Duration</label>
+              <label for="durationInput">Planned Duration</label>
               <input type="text" name="durationInput" id="durationInput" placeholder="Duration in 00:00 or 0.0"
                 required v-model="duration.input" :style="visibility(duration.inputEnabled)" @input="calculateTime"
                 @change="adjustTime">
@@ -108,10 +108,10 @@
             </div>
             <div>
               <span class="display-label">Real Duration</span>
-              <span class="display-value">{{currentDurationValue}}</span>
+              <span class="display-value">{{realDurationValue}}</span>
             </div>
             <div>
-              <span class="display-label">Difference to Plan</span>
+              <span class="display-label">Difference</span>
               <span class="display-value">{{diffDurationValue}}</span>
             </div>
             <div>

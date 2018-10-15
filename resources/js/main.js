@@ -51,7 +51,7 @@ new Vue({
       value: '--:--',
       inputEnabled : true
     },
-    currentDurationValue: '--:--',
+    realDurationValue: '--:--',
     diffDurationValue: '--:--',
     statusValue: '-',
     heroText: 'Your greatest resource<br /> is your time.'
@@ -172,12 +172,12 @@ new Vue({
       if (startMoment.isValid() && startMoment.isBefore(moment())) {
 
         var tillFixedEndOrNow = moment.duration(moment().diff(startMoment));
-        if(endInputMoment.isValid()) {
+        if(endInputMoment.isValid() && moment().isAfter(endInputMoment)) {
           tillFixedEndOrNow = moment.duration(endInputMoment.diff(startMoment));
         }
 
 
-        this.currentDurationValue = tillFixedEndOrNow.format(moment.HTML5_FMT.TIME, {
+        this.realDurationValue = tillFixedEndOrNow.format(moment.HTML5_FMT.TIME, {
           trim: false
         });
 
@@ -195,7 +195,7 @@ new Vue({
 
           this.statusValue = percentage.toFixed(2) + ' % : ' + tillNowHours.toFixed(2) + ' of ' + durationHours.toFixed(2) + '';
 
-          if(endInputMoment.isValid() && tillNowHours === durationHours) {
+          if(endInputMoment.isValid() && moment().isAfter(endInputMoment) && tillNowHours === durationHours) {
             this.heroText = 'just in time';
           } else if(tillFixedEndOrNow.asMinutes() <= durationDuration.asMinutes()) {
             this.heroText = 'time to stop in<br/>' + moment.duration(diffDuration.asMinutes()*-1, 'minutes').format('h [hours], m [minutes]');
@@ -210,7 +210,7 @@ new Vue({
 
       } else {
 
-        this.currentDurationValue = '--:--';
+        this.realDurationValue = '--:--';
         this.diffDurationValue = '--:--';
 
         if(startMoment.isValid() && startMoment.isAfter(moment())) {
