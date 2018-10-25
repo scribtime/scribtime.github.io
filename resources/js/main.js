@@ -52,6 +52,11 @@ new Vue({
         value: '--:--',
         inputEnabled: true
       },
+      breakHours: {
+        input: '',
+        value: '--:--',
+        inputEnabled: true
+      },
       end: {
         input: '',
         value: '--:--',
@@ -61,10 +66,30 @@ new Vue({
       statusValue: '-',
       progressValue: '-',
       heroText: 'Your greatest resource<br /> is your time.',
-      fullDateFormat: fullDateFormat
+      fullDateFormat: fullDateFormat,
+      progressBarLeft: this.toProgressBarStyle(0),
+      progressBarRight: this.toProgressBarStyle(100)
     };
   },
   methods: {
+    toProgressBarStyle(percent) {
+      if(percent===100) {
+        return {
+          width: '100%',
+          'border-radius': '5px',
+          'border-width': '1px'
+        };
+      } else if(percent===0) {
+        return {
+          width: '0%',
+          display: 'none'
+        };       
+      }
+
+      return {
+        width: percent + '%'
+      }
+    },
     loadTime: function () {
       var now = moment().format('LT');
       var today = moment().format('l');
@@ -81,12 +106,16 @@ new Vue({
 
       var startMoment = this.toDateTimeMoment(this.start.input);
       var hoursDuration = this.toHoursDuration(this.plannedHours.input);
+      var breakDuration = this.toHoursDuration(this.breakHours.input);
+      if(!breakDuration.isValid()) {
+        breakDuration = this.toHoursDuration('00:00');
+      }
       var endMoment = this.toDateTimeMoment(this.end.input);
 
       if (startMoment.isValid() && endMoment.isValid()) {
 
         this.start.value = this.formatDateTimeMoment(startMoment);
-        this.plannedHours.value = moment.duration(endMoment.diff(startMoment)).format(moment.HTML5_FMT.TIME, {
+        this.plannedHours.value = moment.duration(endMoment.diff(startMoment)).subtract(breakDuration).format(moment.HTML5_FMT.TIME, {
           trim: false
         });
         this.end.value = this.formatDateTimeMoment(endMoment);
@@ -98,12 +127,12 @@ new Vue({
         this.plannedHours.value = hoursDuration.format(moment.HTML5_FMT.TIME, {
           trim: false
         });
-        this.end.value = this.formatDateTimeMoment(startMoment.add(hoursDuration));
+        this.end.value = this.formatDateTimeMoment(startMoment.add(hoursDuration).add(breakDuration));
         this.end.inputEnabled = false;
 
       } else if (hoursDuration.isValid() && endMoment.isValid()) {
 
-        this.start.value = this.formatDateTimeMoment(endMoment.subtract(hoursDuration));
+        this.start.value = this.formatDateTimeMoment(endMoment.subtract(hoursDuration).subtract(breakDuration));
         this.plannedHours.value = hoursDuration.format(moment.HTML5_FMT.TIME, {
           trim: false
         });
@@ -138,6 +167,7 @@ new Vue({
 
       var startMoment = this.toDateTimeMoment(this.start.input);
       var hoursDuration = this.toHoursDuration(this.plannedHours.input);
+      var breakDuration = this.toHoursDuration(this.breakHours.input);
       var endMoment = this.toDateTimeMoment(this.end.input);
 
       
@@ -145,9 +175,10 @@ new Vue({
         this.start.input = this.formatDateTimeMoment(startMoment);
       }
       if (hoursDuration.isValid()) {
-        this.plannedHours.input = hoursDuration.format(moment.HTML5_FMT.TIME, {
-          trim: false
-        });
+        this.plannedHours.input = this.formatDuration(hoursDuration);
+      }
+      if (breakDuration.isValid()) {
+        this.breakHours.input = this.formatDuration(breakDuration);
       }
       if (endMoment.isValid()) {
         this.end.input = this.formatDateTimeMoment(endMoment);
@@ -200,6 +231,10 @@ new Vue({
       var hoursDuration = this.toHoursDuration(this.plannedHours.value);
       var hoursInputDuration = this.toHoursDuration(this.plannedHours.input);
       var plannedDuration = hoursInputDuration.isValid() ? hoursInputDuration : hoursDuration;
+      var breakDuration = this.toHoursDuration(this.breakHours.input);
+      if(!breakDuration.isValid()) {
+        breakDuration = this.toHoursDuration('00:00');
+      }
 
       var endMoment = this.toDateTimeMoment(this.end.value);
       var endInputMoment = this.toDateTimeMoment(this.end.input);
@@ -212,16 +247,24 @@ new Vue({
           tillFixedEndOrNowDuration = moment.duration(endInputMoment.diff(startMoment));
         }
 
-        this.planValue = this.formatDuration(hoursDuration) + ' h  [ from ' + this.formatDateTimeMoment(startMoment) + ' to ' + this.formatDateTimeMoment(endMoment) + ' ]';
+        this.planValue = this.formatDuration(hoursDuration.clone().add(breakDuration)) + ' h  [ from ' + this.formatDateTimeMoment(startMoment) + ' to ' + this.formatDateTimeMoment(endMoment) + ' ]';
 
         if (plannedDuration.isValid()) {
 
           var diffHoursDuration = tillFixedEndOrNowDuration.clone().subtract(plannedDuration);
           var tillNowHoursFloat = parseFloat(tillFixedEndOrNowDuration.format('h', 2));
-          var hoursFloat = parseFloat(plannedDuration.format('h', 2));
+          var hoursFloat = parseFloat(plannedDuration.format('h', 2)) + parseFloat(breakDuration.format('h', 2));
           
           var percentage = tillNowHoursFloat * (100 / hoursFloat);
           percentage = (percentage === Infinity) ? 0 : percentage;
+
+          var progressBarPercentage = Math.floor(percentage);
+          if(progressBarPercentage > 100) {
+            progressBarPercentage = 100;
+          }
+
+          this.progressBarLeft = this.toProgressBarStyle(progressBarPercentage);
+          this.progressBarRight = this.toProgressBarStyle(100 - progressBarPercentage);
           
           this.progressValue = percentage.toFixed(2) + ' % [ ' + tillNowHoursFloat.toFixed(2) + ' h of ' + hoursFloat.toFixed(2) + ' h ]';
           
@@ -237,11 +280,13 @@ new Vue({
             diffHoursText = ', exceeded by ' + this.formatDuration(diffHoursDuration);
           }
 
-          this.statusValue = this.formatDuration(tillFixedEndOrNowDuration) + ' h [ ' + this.formatDuration(plannedDuration) + ' h ' + diffHoursText + ' ]';
+          this.statusValue = this.formatDuration(tillFixedEndOrNowDuration) + ' h [ ' + this.formatDuration(plannedDuration.clone().add(breakDuration)) + ' h ' + diffHoursText + ' ]';
 
         } else {
           this.progressValue = '-';
           this.heroText = 'Your greatest resource<br/> is your time.'
+          this.progressBarLeft = this.toProgressBarStyle(0);
+          this.progressBarRight = this.toProgressBarStyle(100);
         }
 
       } else {

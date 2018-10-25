@@ -90,11 +90,17 @@
                 @change="adjustTime">
             </div>
             <div>
+              <label for="breakHoursInput">Break</label>
+              <input type="text" name="breakHoursInput" id="breakHoursInput" :placeholder="breakHours.value"
+                required v-model="breakHours.input" @input="calculateTime"
+                @change="adjustTime">
+            </div>
+            <div>
               <label for="endInput">End</label>
               <input type="text" name="endInput" id="endInput" :placeholder="end.value" required v-model="end.input"
                 @input="calculateTime" @change="adjustTime">
             </div>
-            <div></div>
+            <div class="day-box-end"></div>
           </div>
         </div>
 
@@ -114,8 +120,11 @@
             <div>
               <span class="display-label">Progress</span>
               <span class="display-value">{{progressValue}}</span>
+              <div class="progress-bar">
+                <span class="progress-bar-left" :style="progressBarLeft">&nbsp;</span><span class="progress-bar-right" :style="progressBarRight">&nbsp;</span>
+              </div>
             </div>
-            <div></div>
+            <div class="day-box-end"></div>
           </div>
         </div>
 

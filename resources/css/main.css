@@ -1,5 +1,9 @@
 /*
-F5EFEF	BA9857	8FBC50	B54430	2D2D32
+ white : F5EFEF
+ brown : BA9857
+ green : 8FBC50
+ red : B54430
+ black : 2D2D32
 */
 
 body {
@@ -273,6 +277,11 @@ header .logo {
   box-shadow: 0 2px 2px #ededed;
 }
 
+.day-box h3 {
+  margin-top: 13px;
+  margin-bottom: 8px;
+}
+
 .day-box-entries {
   border: 2px solid #8FBC50;
 }
@@ -292,9 +301,47 @@ header .logo {
   border-top-right-radius: 5px;
 }
 
-.day-box div:last-child {
+.day-box .day-box-end {
   text-align: center;
   border: none;
+}
+
+.day-box .progress-bar {
+  border: none;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.day-box .progress-bar-left {
+  box-sizing: border-box;
+  display: inline-block;
+  height: 38px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 0px;
+  border-color: #e8e8e8;
+  border-style: solid;
+  border-width: 1px;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+  width: 1%;
+  background-color: #afd876;
+}
+
+.day-box .progress-bar-right {
+  box-sizing: border-box;
+  display: inline-block;
+  height: 38px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 0px;
+  border-color: #e8e8e8;
+  border-style: solid;
+  border-width: 1px;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+  width: 99%;
+  background-color: #fcfcfc;
 }
 
 /* ---------------------------- */
@@ -319,7 +366,7 @@ header .logo {
 
 label {
   display: inline-block;
-  padding-bottom: 10px;
+  padding-bottom: 7px;
   font-size: 90%;
 }
 
@@ -336,8 +383,9 @@ input:focus {
 }
 
 .display-label {
+  box-sizing: border-box;
   display: inline-block;
-  padding-bottom: 10px;
+  padding-bottom: 7px;
   font-size: 90%;
 }
 
