@@ -251,7 +251,7 @@ new Vue({
 
         if (plannedDuration.isValid()) {
 
-          var diffHoursDuration = tillFixedEndOrNowDuration.clone().subtract(plannedDuration);
+          var diffHoursDuration = tillFixedEndOrNowDuration.clone().subtract(plannedDuration.clone().add(breakDuration));
           var tillNowHoursFloat = parseFloat(tillFixedEndOrNowDuration.format('h', 2));
           var hoursFloat = parseFloat(plannedDuration.format('h', 2)) + parseFloat(breakDuration.format('h', 2));
           
@@ -272,7 +272,7 @@ new Vue({
           if (endInputMoment.isValid() && moment().isAfter(endInputMoment) && tillNowHoursFloat === hoursFloat) {
             this.heroText = 'just in time';
             diffHoursText = ', just in time';
-          } else if (tillFixedEndOrNowDuration.asMinutes() <= plannedDuration.asMinutes()) {
+          } else if (tillFixedEndOrNowDuration.asMinutes() <= plannedDuration.clone().add(breakDuration).asMinutes()) {
             this.heroText = 'time to stop in<br/>' + moment.duration(diffHoursDuration.asMinutes() * -1, 'minutes').format('h [hours], m [minutes]');
             diffHoursText = ', remaining ' + this.formatDuration(moment.duration(diffHoursDuration.asMinutes() * -1, 'minutes')) + ' h'
           } else {
