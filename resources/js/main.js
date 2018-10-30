@@ -35,7 +35,6 @@ function getLang() {
 new Vue({
   el: '#app',
   data: function () {
-    var fullDateFormat = moment.localeData().longDateFormat('L') + ' ' + moment.HTML5_FMT.TIME;
     return {
       currentTime: moment().format('LT'),
       interval: null,
@@ -66,7 +65,6 @@ new Vue({
       statusValue: '-',
       progressValue: '-',
       heroText: 'Your greatest resource<br /> is your time.',
-      fullDateFormat: fullDateFormat,
       progressBarLeft: this.toProgressBarStyle(0),
       progressBarRight: this.toProgressBarStyle(100)
     };
@@ -104,44 +102,44 @@ new Vue({
     },
     calculateTime: function () {
 
-      var startMoment = this.toDateTimeMoment(this.start.input);
-      var hoursDuration = this.toHoursDuration(this.plannedHours.input);
-      var breakDuration = this.toHoursDuration(this.breakHours.input);
+      var startMoment = timeUtils.toDateTimeMoment(this.start.input);
+      var hoursDuration = timeUtils.toHoursDuration(this.plannedHours.input);
+      var breakDuration = timeUtils.toHoursDuration(this.breakHours.input);
       if(!breakDuration.isValid()) {
-        breakDuration = this.toHoursDuration('00:00');
+        breakDuration = timeUtils.toHoursDuration('00:00');
       }
-      var endMoment = this.toDateTimeMoment(this.end.input);
+      var endMoment = timeUtils.toDateTimeMoment(this.end.input);
 
       if (startMoment.isValid() && endMoment.isValid()) {
 
-        this.start.value = this.formatDateTimeMoment(startMoment);
+        this.start.value = timeUtils.formatDateTimeMoment(startMoment);
         this.plannedHours.value = moment.duration(endMoment.diff(startMoment)).subtract(breakDuration).format(moment.HTML5_FMT.TIME, {
           trim: false
         });
-        this.end.value = this.formatDateTimeMoment(endMoment);
+        this.end.value = timeUtils.formatDateTimeMoment(endMoment);
         this.plannedHours.inputEnabled = false;
 
       } else if (startMoment.isValid() && hoursDuration.isValid()) {
 
-        this.start.value = this.formatDateTimeMoment(startMoment);
+        this.start.value = timeUtils.formatDateTimeMoment(startMoment);
         this.plannedHours.value = hoursDuration.format(moment.HTML5_FMT.TIME, {
           trim: false
         });
-        this.end.value = this.formatDateTimeMoment(startMoment.add(hoursDuration).add(breakDuration));
+        this.end.value = timeUtils.formatDateTimeMoment(startMoment.add(hoursDuration).add(breakDuration));
         this.end.inputEnabled = false;
 
       } else if (hoursDuration.isValid() && endMoment.isValid()) {
 
-        this.start.value = this.formatDateTimeMoment(endMoment.subtract(hoursDuration).subtract(breakDuration));
+        this.start.value = timeUtils.formatDateTimeMoment(endMoment.subtract(hoursDuration).subtract(breakDuration));
         this.plannedHours.value = hoursDuration.format(moment.HTML5_FMT.TIME, {
           trim: false
         });
-        this.end.value = this.formatDateTimeMoment(endMoment);
+        this.end.value = timeUtils.formatDateTimeMoment(endMoment);
         this.start.inputEnabled = false;
 
       } else if (startMoment.isValid()) {
 
-        this.start.value = this.formatDateTimeMoment(startMoment);
+        this.start.value = timeUtils.formatDateTimeMoment(startMoment);
         this.plannedHours.value = '--:--';
         this.end.value = '--:--';
 
@@ -165,79 +163,40 @@ new Vue({
     },
     adjustTime: function() {
 
-      var startMoment = this.toDateTimeMoment(this.start.input);
-      var hoursDuration = this.toHoursDuration(this.plannedHours.input);
-      var breakDuration = this.toHoursDuration(this.breakHours.input);
-      var endMoment = this.toDateTimeMoment(this.end.input);
+      var startMoment = timeUtils.toDateTimeMoment(this.start.input);
+      var hoursDuration = timeUtils.toHoursDuration(this.plannedHours.input);
+      var breakDuration = timeUtils.toHoursDuration(this.breakHours.input);
+      var endMoment = timeUtils.toDateTimeMoment(this.end.input);
 
       
       if (startMoment.isValid()) {
-        this.start.input = this.formatDateTimeMoment(startMoment);
+        this.start.input = timeUtils.formatDateTimeMoment(startMoment);
       }
       if (hoursDuration.isValid()) {
-        this.plannedHours.input = this.formatDuration(hoursDuration);
+        this.plannedHours.input = timeUtils.formatDuration(hoursDuration);
       }
       if (breakDuration.isValid()) {
-        this.breakHours.input = this.formatDuration(breakDuration);
+        this.breakHours.input = timeUtils.formatDuration(breakDuration);
       }
       if (endMoment.isValid()) {
-        this.end.input = this.formatDateTimeMoment(endMoment);
+        this.end.input = timeUtils.formatDateTimeMoment(endMoment);
       }
 
-    },
-    toDateTimeMoment: function(stringValue) {
-      if (_.trim(stringValue) === '') {
-        return moment.invalid();
-      }
-      var fullDate = moment(stringValue, this.fullDateFormat, true);
-      if (fullDate.isValid()) {
-        return fullDate;
-      }
-      return moment(stringValue, moment.HTML5_FMT.TIME);
-    },
-    formatDateTimeMoment: function(momentValue) {
-      if(!momentValue.isValid()) {
-        return '--:--';
-      }
-      if(momentValue.isSame(moment(), 'day')) {
-        return momentValue.format(moment.HTML5_FMT.TIME);
-      }
-      return momentValue.format(this.fullDateFormat);
-    },
-    formatDuration: function(durationValue) {
-      if(!durationValue.isValid()) {
-        return '--:--';
-      }
-      return durationValue.format(moment.HTML5_FMT.TIME, {
-        trim: false
-      });
-    },
-    toHoursDuration: function(value) {
-      if (_.trim(value) === '' || value === '--:--') {
-        return moment.duration.invalid();
-      } else if (/^\d+$/.test(value)) {
-        return moment.duration(value + ':00');
-      } else if (/^\d+?\.\d+$/.test(value)) {
-        return moment.duration(parseFloat(value), 'hours');
-      } else if (/^\d+?:\d+(:\d+)?$/.test(value)) {
-        return moment.duration(value);
-      }
-      return moment.invalid();
     },
     calculateInfosAndHeroText: function () {
 
-      var startMoment = this.toDateTimeMoment(this.start.value);
+      var startMoment = timeUtils.toDateTimeMoment(this.start.value);
       
-      var hoursDuration = this.toHoursDuration(this.plannedHours.value);
-      var hoursInputDuration = this.toHoursDuration(this.plannedHours.input);
+      var hoursDuration = timeUtils.toHoursDuration(this.plannedHours.value);
+      var hoursInputDuration = timeUtils.toHoursDuration(this.plannedHours.input);
       var plannedDuration = hoursInputDuration.isValid() ? hoursInputDuration : hoursDuration;
-      var breakDuration = this.toHoursDuration(this.breakHours.input);
+      var breakDuration = timeUtils.toHoursDuration(this.breakHours.input);
       if(!breakDuration.isValid()) {
-        breakDuration = this.toHoursDuration('00:00');
+        breakDuration = timeUtils.toHoursDuration('00:00');
       }
 
-      var endMoment = this.toDateTimeMoment(this.end.value);
-      var endInputMoment = this.toDateTimeMoment(this.end.input);
+      var endMoment = timeUtils.toDateTimeMoment(this.end.value);
+      var endInputMoment = timeUtils.toDateTimeMoment(this.end.input);
 
       if (startMoment.isValid() && startMoment.isBefore(moment())) {
 
@@ -247,7 +206,7 @@ new Vue({
           tillFixedEndOrNowDuration = moment.duration(endInputMoment.diff(startMoment));
         }
 
-        this.planValue = this.formatDuration(hoursDuration.clone().add(breakDuration)) + ' h  [ from ' + this.formatDateTimeMoment(startMoment) + ' to ' + this.formatDateTimeMoment(endMoment) + ' ]';
+        this.planValue = timeUtils.formatDuration(hoursDuration.clone().add(breakDuration)) + ' h  [ from ' + timeUtils.formatDateTimeMoment(startMoment) + ' to ' + timeUtils.formatDateTimeMoment(endMoment) + ' ]';
 
         if (plannedDuration.isValid()) {
 
@@ -274,13 +233,13 @@ new Vue({
             diffHoursText = ', just in time';
           } else if (tillFixedEndOrNowDuration.asMinutes() <= plannedDuration.clone().add(breakDuration).asMinutes()) {
             this.heroText = 'time to stop in<br/>' + moment.duration(diffHoursDuration.asMinutes() * -1, 'minutes').format('h [hours], m [minutes]');
-            diffHoursText = ', remaining ' + this.formatDuration(moment.duration(diffHoursDuration.asMinutes() * -1, 'minutes')) + ' h'
+            diffHoursText = ', remaining ' + timeUtils.formatDuration(moment.duration(diffHoursDuration.asMinutes() * -1, 'minutes')) + ' h'
           } else {
             this.heroText = 'time exceeded by<br/>' + diffHoursDuration.format('h [hours], m [minutes]');
-            diffHoursText = ', exceeded by ' + this.formatDuration(diffHoursDuration);
+            diffHoursText = ', exceeded by ' + timeUtils.formatDuration(diffHoursDuration);
           }
 
-          this.statusValue = this.formatDuration(tillFixedEndOrNowDuration) + ' h [ ' + this.formatDuration(plannedDuration.clone().add(breakDuration)) + ' h ' + diffHoursText + ' ]';
+          this.statusValue = timeUtils.formatDuration(tillFixedEndOrNowDuration) + ' h [ ' + timeUtils.formatDuration(plannedDuration.clone().add(breakDuration)) + ' h ' + diffHoursText + ' ]';
 
         } else {
           this.progressValue = '-';
