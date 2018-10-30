@@ -171,6 +171,17 @@ header .logo {
 
 /* Main navigation */
 
+.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 100%;
+  z-index: 9999;
+  background-color:rgba(45, 45, 50, 0.8);
+}
+
 .main-nav {
   margin: 0;
   padding-top: 5px;
