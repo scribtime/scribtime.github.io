@@ -212,8 +212,8 @@ new Vue({
 
           var diffHoursDuration = tillFixedEndOrNowDuration.clone().subtract(plannedDuration.clone().add(breakDuration));
           var tillNowHoursFloat = parseFloat(tillFixedEndOrNowDuration.format('h', 2));
-          var plannedHoursFloat = plannedDuration.format('h', 2)
-          var breakHoursFloat = parseFloat(breakDuration.format('h', 2)
+          var plannedHoursFloat = parseFloat(plannedDuration.format('h', 2));
+          var breakHoursFloat = parseFloat(breakDuration.format('h', 2));
           var hoursFloat = parseFloat(plannedHoursFloat + breakHoursFloat);
           
           var percentage = tillNowHoursFloat * (100 / hoursFloat);
