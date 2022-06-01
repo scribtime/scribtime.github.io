@@ -212,7 +212,9 @@ new Vue({
 
           var diffHoursDuration = tillFixedEndOrNowDuration.clone().subtract(plannedDuration.clone().add(breakDuration));
           var tillNowHoursFloat = parseFloat(tillFixedEndOrNowDuration.format('h', 2));
-          var hoursFloat = parseFloat(plannedDuration.format('h', 2)) + parseFloat(breakDuration.format('h', 2));
+          var plannedHoursFloat = plannedDuration.format('h', 2)
+          var breakHoursFloat = parseFloat(breakDuration.format('h', 2)
+          var hoursFloat = parseFloat(plannedHoursFloat + breakHoursFloat);
           
           var percentage = tillNowHoursFloat * (100 / hoursFloat);
           percentage = (percentage === Infinity) ? 0 : percentage;
@@ -225,7 +227,7 @@ new Vue({
           this.progressBarLeft = this.toProgressBarStyle(progressBarPercentage);
           this.progressBarRight = this.toProgressBarStyle(100 - progressBarPercentage);
           
-          this.progressValue = percentage.toFixed(2) + ' % [ ' + tillNowHoursFloat.toFixed(2) + ' h of ' + hoursFloat.toFixed(2) + ' h ]';
+          this.progressValue = percentage.toFixed(2) + ' % [ ' + tillNowHoursFloat.toFixed(2) + ' h of ' + hoursFloat.toFixed(2) + ' h - ' + breakHoursFloat.toFixed(2) + ' = ' + plannedHoursFloat.toFixed(2) + ' h ]';
           
           var diffHoursText = '';
           if (endInputMoment.isValid() && moment().isAfter(endInputMoment) && tillNowHoursFloat === hoursFloat) {
